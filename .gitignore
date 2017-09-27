@@ -301,3 +301,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+asstMobileAppService/Migrations/201709261212346_name1.cs

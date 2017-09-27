@@ -95,7 +95,7 @@ public class ToDoActivity extends Activity {
             // Mobile Service URL and key
             mClient = new MobileServiceClient(
                     "https://asstmobileapp.azurewebsites.net",
-                    this).withFilter(new ProgressFilter());
+                    this);
 
             // Extend timeout from default of 10s to 20s
             mClient.setAndroidHttpClientFactory(new OkHttpClientFactory() {

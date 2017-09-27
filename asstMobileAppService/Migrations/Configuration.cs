@@ -1,6 +1,5 @@
 namespace asstMobileAppService.Migrations
 {
-    using Microsoft.Azure.Mobile.Server.Tables;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -10,8 +9,7 @@ namespace asstMobileAppService.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
-            SetSqlGenerator("System.Data.SqlClient", new EntityTableSqlGenerator());
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(asstMobileAppService.Models.asstMobileAppContext context)
