@@ -22,7 +22,8 @@ namespace asstMobileAppService
             config.EnableSystemDiagnosticsTracing();
 
             new MobileAppConfiguration()
-                .UseDefaultConfiguration()
+                .AddTablesWithEntityFramework()
+                .MapApiControllers()
                 .ApplyTo(config);
 
             // Use Entity Framework Code First to create database tables based on your DbContext
