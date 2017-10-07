@@ -55,6 +55,8 @@ public class Contacts extends AppCompatActivity {
         editor.putString("contact1", t1.getText().toString());
         editor.putString("contact2", t2.getText().toString());
         editor.putString("contact3", t3.getText().toString());
+
+
         editor.commit();
 
     }

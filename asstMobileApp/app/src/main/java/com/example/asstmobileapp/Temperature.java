@@ -37,6 +37,16 @@ public class Temperature extends AppCompatActivity {
                 togglefcn();
             }
         });
+
+        SharedPreferences prefs = getSharedPreferences("myfile", Context.MODE_PRIVATE);
+        String tempThresh = prefs.getString("temperaturev1", "");
+        boolean tempToggle = prefs.getBoolean("tempToggle", false);
+
+        EditText t1 = (EditText) findViewById(R.id.temp);
+        t1.setText(tempThresh);
+
+
+
     }
 
 
@@ -46,9 +56,9 @@ public class Temperature extends AppCompatActivity {
         super.onPause();
 
         EditText t1 = (EditText) findViewById(R.id.temp);
-        SharedPreferences prefs = getSharedPreferences("myfile", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("Myfile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("temperature", t1.toString());
+        editor.putString("temperaturev1", t1.getText().toString());
         editor.putBoolean("tempToggle", tempStatus);
         editor.commit();
 

@@ -44,10 +44,10 @@ public class Pressure extends AppCompatActivity {
 
         super.onPause();
 
-        EditText t1 = (EditText) findViewById(R.id.temp);
-        SharedPreferences prefs = getSharedPreferences("myfile", Context.MODE_PRIVATE);
+        EditText t1 = (EditText) findViewById(R.id.pressure);
+        SharedPreferences prefs = getSharedPreferences("Myfile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("pressure", t1.toString());
+        editor.putString("pressure", t1.getText().toString());
         editor.putBoolean("pressureToggle", pressureStatus);
         editor.commit();
 

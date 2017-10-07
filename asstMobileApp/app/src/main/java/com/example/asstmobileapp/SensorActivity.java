@@ -27,8 +27,8 @@ public class SensorActivity extends Activity implements SensorEventListener {
     private String contact2;
     private String contact3;
 
-    private float tempThresh;
-    private float pressThresh;
+    private String tempThresh;
+    private String pressThresh;
     private boolean pressToggle;
     private boolean tempToggle;
 
@@ -82,10 +82,14 @@ public class SensorActivity extends Activity implements SensorEventListener {
         contact1 = prefs.getString("contact1", "NA");
         contact2 = prefs.getString("contact2", "NA");
         contact3 = prefs.getString("contact3", "NA");
-        pressThresh = prefs.getFloat("pressure", 999);
+        pressThresh = prefs.getString("pressure", "999");
         pressToggle = prefs.getBoolean("pressureToggle", false);
-        tempThresh = prefs.getFloat("temperature", 999);
+        tempThresh = prefs.getString("temperaturev1", "999");
         tempToggle = prefs.getBoolean("tempToggle", false);
+
+
+        TextView tv = (TextView)findViewById(R.id.textView2);
+        tv.setText(tempThresh );
 
     }
 
@@ -106,7 +110,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
         if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
             float temper = event.values[0];
-            if (temper > tempThresh && tempToggle) {
+            if (temper > Float.parseFloat(tempThresh) && tempToggle) {
                 sendSms(contact1);
                 sendSms(contact2);
                 sendSms(contact3);
@@ -116,7 +120,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
         if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
             float press = event.values[0];
-            if (press > pressThresh && pressToggle) {
+            if (press > Float.parseFloat(pressThresh) && pressToggle) {
                 sendSms(contact1);
                 sendSms(contact2);
                 sendSms(contact3);
@@ -133,6 +137,9 @@ public class SensorActivity extends Activity implements SensorEventListener {
         super.onResume();
         mSensorManager.registerListener(this, mPressure, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mTemperature, SensorManager.SENSOR_DELAY_NORMAL);
+
+
+
     }
 
     @Override
