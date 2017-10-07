@@ -1,43 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:stretchColumns="1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/eleTeeth"
+    android:fitsSystemWindows="true"
     tools:context=".LoginActivity">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
+        <!--  Email Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Enter your email account" />
+        </android.support.design.widget.TextInputLayout>
 
-    <TableRow>
-        <TextView
-            android:textSize="20sp"
-            android:text="Account:"
-            android:textColor="#000"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/account"
-            android:hint="enter your account"
-            />
-    </TableRow>
+        <!--  Password Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="Enter your password"/>
+        </android.support.design.widget.TextInputLayout>
 
-    <TableRow>
-        <TextView
-            android:textSize="20sp"
-            android:text="password:"
-            android:textColor="#000"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/password"
-            android:hint="enter your password"
-            />
-    </TableRow>
-
-    <TableRow>
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/login"
-            android:layout_span="2"
-            android:text="Login"
-            android:padding="15dp"
-            android:textSize="25sp"
-            android:layout_width="match_parent" />
-    </TableRow>
-
-</TableLayout>
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:text="Login"/>
+</LinearLayout>
+</ScrollView>

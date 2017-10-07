@@ -8,5 +8,7 @@
     <string name="checkbox_text">Item Text</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Action Settings</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_next">NextActivity</string>
 
 </resources>

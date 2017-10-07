@@ -1,17 +1,20 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:weightSum="1"
+    android:background="@color/eleTeeth"
+    tools:context=".AccelerometerActivity">
 
+    <TableRow>
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
         android:text="speed test"
-        android:textSize="25sp" />
+        android:textSize="35sp" />
+    </TableRow>
 
+    <TableRow>
     <TextView
         android:id="@+id/tv_step"
         android:visibility="invisible"
@@ -22,12 +25,27 @@
         android:text="0"
         android:textSize="10sp"
         android:textStyle="bold" />
+    </TableRow>
 
+    <TableRow>
+
+        <TextView
+            android:id="@+id/view"
+            android:text="Speed Control"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/speedControl"
+            android:hint="enter your speed" />
+    </TableRow>
+
+    <TableRow>
     <Button
         android:id="@+id/btn_start"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:text="start"
+        android:text="SAVE"
         android:textSize="25sp" />
+    </TableRow>
 
-</LinearLayout>
+</TableLayout>

@@ -29,10 +29,9 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
     private Sensor mSensorAccelerometer;
     private NotificationManager mNotificationManager;
     private int notificationID = 100;
-    private int totalMessages = 0;
     private TextView tv_step;
-    private Button button;
     private Button btn_start;
+    private TextView tv_speed;
     private int step = 0;   //steps
     private int tempStep = 0;//control the warning toast
     private double oriValue = 0;  //original value
@@ -47,6 +46,9 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.step_count);
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+
         startCountDownTime(10);
 
         sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -79,6 +81,7 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
 
         tv_step = (TextView) findViewById(R.id.tv_step);
         btn_start = (Button) findViewById(R.id.btn_start);
+        tv_speed = (TextView) findViewById(R.id.speedControl);
         btn_start.setOnClickListener(this);
     }
 
@@ -127,7 +130,7 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                if ( tempStep > 20) {
+                                                if ( tempStep > Integer.parseInt(tv_speed.getText().toString())) {
                                                     displayNotification();
                                                 }
                                             }
@@ -141,12 +144,6 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
                             };
 
                             runAsyncTask(task);
-
-
-                            //Toast.makeText(getApplicationContext(), "Please watch out your speed!",
-                                   // Toast.LENGTH_SHORT).show();
-
-
                     }
                     motiveState = true;
                 }

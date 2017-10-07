@@ -22,7 +22,7 @@ public class LoginInfo {
      * Sets the item text
      *
      * @param account
-     *            text to set
+     *
      */
     public final void setAccount(String account) {
         mAccount = account;
@@ -36,7 +36,7 @@ public class LoginInfo {
      * Sets the item text
      *
      * @param password
-     *            text to set
+     *
      */
     public final void setPassword(String password) {
         mPassword = password;
