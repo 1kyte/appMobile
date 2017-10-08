@@ -24,18 +24,22 @@
         <activity
             android:name=".LocationActivity"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".NotificationClass" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".Contacts" />
         <activity android:name=".Pressure" />
-        <activity android:name=".SensorActivity" />
-        <activity android:name=".Temperature" />
+        <activity android:name=".SensorActivity">
+
+        </activity>
+        <activity android:name=".Temperature">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity android:name=".AccelerometerActivity" />
     </application>
 

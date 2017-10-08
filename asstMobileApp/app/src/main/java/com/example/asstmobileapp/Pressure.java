@@ -13,13 +13,14 @@ import android.widget.ToggleButton;
 
 public class Pressure extends AppCompatActivity {
 
+    //boolean for on/off status and toggle button that sets this value
     ToggleButton togglebtn;
     boolean pressureStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pressure);
-
+        //go to sensor activity on saving
         Button btnSettings = (Button) findViewById(R.id.save2);
         btnSettings.setOnClickListener(new View.OnClickListener() {
 
@@ -29,7 +30,7 @@ public class Pressure extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
         });
-
+        //find on/off toggle button
         togglebtn = (ToggleButton) findViewById(R.id.togglePress);
         togglebtn.setOnClickListener(new View.OnClickListener() {
 
@@ -37,15 +38,22 @@ public class Pressure extends AppCompatActivity {
                 togglefcn();
             }
         });
+
+        //load previously saved threshold
+        SharedPreferences prefs = getSharedPreferences("SafetyApp", Context.MODE_PRIVATE);
+        String pressThresh = prefs.getString("pressure", "60");
+
+        EditText t1 = (EditText) findViewById(R.id.pressure);
+        t1.setText(pressThresh);
     }
 
     @Override
     protected  void onPause(){
 
         super.onPause();
-
+        //saving chosen settings into the file (which include on/off and the chosen threshold
         EditText t1 = (EditText) findViewById(R.id.pressure);
-        SharedPreferences prefs = getSharedPreferences("Myfile", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("SafetyApp", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("pressure", t1.getText().toString());
         editor.putBoolean("pressureToggle", pressureStatus);
@@ -53,6 +61,7 @@ public class Pressure extends AppCompatActivity {
 
     }
 
+    //function to change the boolean value when toggling on/off
     public void togglefcn() {
         boolean isOn = togglebtn.isChecked();
 

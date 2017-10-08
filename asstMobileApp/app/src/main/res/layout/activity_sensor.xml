@@ -35,15 +35,6 @@
             android:layout_weight="1"
             android:text="Emergency Contacts" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="heya"
-            tools:layout_editor_absoluteX="149dp"
-            tools:layout_editor_absoluteY="431dp"
-            tools:text="How's it going" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
