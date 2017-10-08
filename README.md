@@ -12,6 +12,6 @@ Password: admin
 ```
 
 ## Authors
-Xunwan Wang (xunwanw@student.unimelb.edu.au)
-Gilbert Massoud (gmassoud@student.unimelb.edu.au)
+Xunwan Wang (xunwanw@student.unimelb.edu.au) . 
+Gilbert Massoud (gmassoud@student.unimelb.edu.au) . 
 Leon Chung (leonc1@student.unimelb.edu.au)
