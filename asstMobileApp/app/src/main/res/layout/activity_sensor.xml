@@ -89,6 +89,4 @@
         android:text="     Pressure        Temperature"
         android:textSize="25dp"
         android:layout_weight="0.05" />
-
-
 </LinearLayout>
