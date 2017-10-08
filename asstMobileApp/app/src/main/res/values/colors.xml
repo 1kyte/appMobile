@@ -14,4 +14,6 @@
     <color name="white">#FFFFFF</color>
     <color name="whiteFlower">#eaf4fc</color>
     <color name="eleTeeth">#f8f4e6</color>
+    <color name="red">#e57373</color>
+    <color name="blue">#2196f3</color>
 </resources>

@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:padding="5dp"
     android:weightSum="1"
-    android:background="@color/eleTeeth"
     tools:context=".AccelerometerActivity">
 
     <TableRow>
@@ -42,10 +41,10 @@
     <TableRow>
     <Button
         android:id="@+id/btn_start"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_width="25dp"
+        android:layout_height="45dp"
         android:text="SAVE"
-        android:textSize="25sp" />
+        android:textSize="20sp" />
     </TableRow>
 
 </TableLayout>

@@ -11,5 +11,7 @@
     <string name="title_activity_login">Login</string>
     <string name="title_activity_next">NextActivity</string>
     <string name="title_activity_location">LocationActivity</string>
+    <string name="title_activity_test">test</string>
+    <string name="title_activity_test_content">testContent</string>
 
 </resources>

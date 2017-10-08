@@ -11,33 +11,43 @@ import android.widget.EditText;
 
 
 public class Contacts extends AppCompatActivity {
+    //Class for saving the emergency contacts of the user
+
+
+
+
+    //Global variables for the text areas that take the input of emergency contacts
     EditText t1;
     EditText t2;
     EditText t3;
 
-    public static final String PREFS_NAME = "Myfile";
+    //file that stores all saved settings of the app
+    public static final String PREFS_NAME = "SafetyApp";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
+        //finds the save button
         Button btnSettings = (Button) findViewById(R.id.button);
+
+        //find the text areas for input
         t1 = (EditText) findViewById(R.id.ct1);
         t2 = (EditText) findViewById(R.id.ct2);
         t3 = (EditText) findViewById(R.id.ct3);
 
-
-        SharedPreferences prefs = getSharedPreferences("Myfile", 0);
-        String ct1 = prefs.getString("contact1", "default_value");
-        String ct2 = prefs.getString("contact2", "default_value");
-        String ct3 = prefs.getString("contact3", "default_value");
+        //load previously saved contacts
+        SharedPreferences prefs = getSharedPreferences("SafetyApp", 0);
+        String ct1 = prefs.getString("contact1", "");
+        String ct2 = prefs.getString("contact2", "");
+        String ct3 = prefs.getString("contact3", "");
 
         t1.setText(ct1);
         t2.setText(ct2);
         t3.setText(ct3);
 
-        t1.setText(ct1);
+        //on save go to sensor activity
         btnSettings.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -50,6 +60,8 @@ public class Contacts extends AppCompatActivity {
     protected  void onPause(){
 
         super.onPause();
+
+        //save the chosen contacts into the file
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("contact1", t1.getText().toString());
@@ -58,6 +70,7 @@ public class Contacts extends AppCompatActivity {
 
 
         editor.commit();
+
 
     }
 }

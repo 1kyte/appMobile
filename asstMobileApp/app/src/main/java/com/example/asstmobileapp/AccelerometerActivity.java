@@ -46,8 +46,8 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accelerometer);
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+       // Intent intent = new Intent(this, LoginActivity.class);
+       // startActivity(intent);
 
         startCountDownTime(10);
 
