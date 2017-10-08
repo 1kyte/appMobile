@@ -76,7 +76,6 @@ public class SensorActivity extends Activity implements SensorEventListener {
             }
         });
 
-
         SharedPreferences prefs = getSharedPreferences("Myfile", 0);
 
         contact1 = prefs.getString("contact1", "NA");
@@ -88,13 +87,13 @@ public class SensorActivity extends Activity implements SensorEventListener {
         tempToggle = prefs.getBoolean("tempToggle", false);
 
 
-        TextView tv = (TextView)findViewById(R.id.textView2);
-        tv.setText(tempThresh );
+        //TextView tv = (TextView)findViewById(R.id.textView2);
+        //tv.setText(tempThresh );
 
     }
 
     public void sendSms(String ct1) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ct1));
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("sms:" + ct1));
         intent.putExtra("sms_body", "DANGER MESSAGE");
         startActivity(intent);
 
@@ -110,6 +109,8 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
         if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
             float temper = event.values[0];
+            TextView tv = (TextView)findViewById(R.id.textView2);
+            tv.setText(temper + "");
             if (temper > Float.parseFloat(tempThresh) && tempToggle) {
                 sendSms(contact1);
                 sendSms(contact2);
