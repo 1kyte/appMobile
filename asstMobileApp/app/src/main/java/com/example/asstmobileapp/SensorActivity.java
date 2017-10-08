@@ -1,37 +1,67 @@
 package com.example.asstmobileapp;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import java.util.List;
+import java.util.Locale;
 
 
 
 public class SensorActivity extends Activity implements SensorEventListener {
+    //Main class that checks for sensor readings and proceeds to send an sms to the
+    // emergency contatcs upon critical/extreme readings
+
+    //sensor variables
     private SensorManager mSensorManager;
     private Sensor mPressure;
     private Sensor mTemperature;
-    private TextView t1;
 
+    //emergency contatcs
     private String contact1;
     private String contact2;
     private String contact3;
 
+    //sensor thresholds and on/off status
     private String tempThresh;
     private String pressThresh;
     private boolean pressToggle;
     private boolean tempToggle;
+
+    //location variables
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private double longitude = 0;
+    private double latitude = 0;
+
+    Geocoder geocoder;
+    List<Address> addresses;
+    String address = "n/a";
+
 
     @Override
     public final void onCreate(Bundle savedInstanceState) {
@@ -46,7 +76,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
         mPressure = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         mTemperature = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
 
-
+        //call contacts activity
         ImageButton btnContacts = (ImageButton) findViewById(R.id.contacts);
         btnContacts.getBackground().setAlpha(0);
         btnContacts.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +89,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
         });
 
 
+        //call temperature activity
         ImageButton btnTemp = (ImageButton) findViewById(R.id.Temperaturebtn);
         btnTemp.getBackground().setAlpha(0);
         btnTemp.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +102,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
         });
 
 
+        //call pressure activity
         ImageButton btnPressure = (ImageButton) findViewById(R.id.pressBtn);
         btnPressure.getBackground().setAlpha(0);
         btnPressure.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +114,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
             }
         });
 
+        //call accelerometer activity
         ImageButton btnAccelerometer = (ImageButton) findViewById(R.id.accelerometerBtn);
         btnAccelerometer.getBackground().setAlpha(0);
         btnAccelerometer.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +127,8 @@ public class SensorActivity extends Activity implements SensorEventListener {
         });
 
 
-        SharedPreferences prefs = getSharedPreferences("Myfile", 0);
+        //load variable data from saved settings in data file
+        SharedPreferences prefs = getSharedPreferences("SafetyApp", 0);
 
         contact1 = prefs.getString("contact1", "NA");
         contact2 = prefs.getString("contact2", "NA");
@@ -105,12 +139,76 @@ public class SensorActivity extends Activity implements SensorEventListener {
         tempToggle = prefs.getBoolean("tempToggle", false);
 
 
+        //location variable instantiations and code
+        geocoder = new Geocoder(this, Locale.getDefault());
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
+                try {
+                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                } catch (java.io.IOException e){}
+
+                address = addresses.get(0).getAddressLine(0);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            //re-direct user to settings if location is disabled
+            @Override
+            public void onProviderDisabled(String s) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        };
+
+        startLocationTracking();
+
     }
 
+    //---start location function definitions---
+    // handle the result of the location permissions request
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 10:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    startLocationTracking();
+                return;
+        }
+    }
+
+    private void startLocationTracking() {
+
+        //request for location permissions from the user
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.INTERNET}
+                        , 10);
+            }
+            return;
+        }
+
+        //start requesting location updates
+        locationManager.requestLocationUpdates("gps", 3000, 0, locationListener);
+    }
+
+    //---end location function definitions---
+
     public void sendSms(String ct1) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ct1));
-        intent.putExtra("sms_body", "DANGER MESSAGE");
-        startActivity(intent);
+
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(ct1,null, String.format("Danger! This person is in an accident at %s\nLONG:%f\nLAT:%f",address,longitude,latitude),null,null);
 
     }
 
@@ -124,8 +222,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
         if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
             float temper = event.values[0];
-          //  TextView tv = (TextView) findViewById(R.id.contacts);
-           // tv.setText(temper + "");
+            //if reading is above threshold temperature
             if (temper > Float.parseFloat(tempThresh) && tempToggle) {
                 sendSms(contact1);
                 sendSms(contact2);
@@ -146,13 +243,13 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
 
     }
-
     @Override
     protected void onResume() {
         // Register a listener for the sensor.
         super.onResume();
         mSensorManager.registerListener(this, mPressure, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mTemperature, SensorManager.SENSOR_DELAY_NORMAL);
+
 
 
     }

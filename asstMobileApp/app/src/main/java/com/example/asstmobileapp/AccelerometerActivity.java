@@ -46,8 +46,6 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accelerometer);
-
-
         startCountDownTime(10);
 
         sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -191,6 +189,7 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    //pop up a notification when something happens
     void displayNotification() {
         NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(
                 this);
