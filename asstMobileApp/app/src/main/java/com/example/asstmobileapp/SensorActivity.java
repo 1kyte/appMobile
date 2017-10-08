@@ -1,15 +1,26 @@
 
 package com.example.asstmobileapp;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -17,6 +28,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
+import java.util.Locale;
 
 
 public class SensorActivity extends Activity implements SensorEventListener {
@@ -38,6 +51,17 @@ public class SensorActivity extends Activity implements SensorEventListener {
     private String pressThresh;
     private boolean pressToggle;
     private boolean tempToggle;
+
+    //location variables
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private double longitude;
+    private double latitude;
+
+    Geocoder geocoder;
+    List<Address> addresses;
+
+    String address;
 
     @Override
     public final void onCreate(Bundle savedInstanceState) {
@@ -94,15 +118,76 @@ public class SensorActivity extends Activity implements SensorEventListener {
         tempThresh = prefs.getString("temperaturev1", "999");
         tempToggle = prefs.getBoolean("tempToggle", false);
 
+        //location variable instantiations and code
+        geocoder = new Geocoder(this, Locale.getDefault());
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
 
+                try {
+                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                } catch (java.io.IOException e){}
+
+                address = addresses.get(0).getAddressLine(0);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            //re-direct user to settings if location is disabled
+            @Override
+            public void onProviderDisabled(String s) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        };
+
+        startLocationTracking();
 
     }
+    //---start location function definitions---
+    // handle the result of the location permissions request
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 10:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    startLocationTracking();
+                return;
+        }
+    }
+
+    private void startLocationTracking() {
+
+        //request for location permissions from the user
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.INTERNET}
+                        , 10);
+            }
+            return;
+        }
+
+        //start requesting location updates
+        locationManager.requestLocationUpdates("gps", 3000, 0, locationListener);
+    }
+
+    //---end location function definitions---
 
     public void sendSms(String ct1) {
 
         SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(ct1,null, "Danger message",null,null);
+        sms.sendTextMessage(ct1,null, String.format("Danger! This person is in an accident at %s\nLONG:%f\nLAT:%f",address,longitude,latitude),null,null);
 
     }
 
