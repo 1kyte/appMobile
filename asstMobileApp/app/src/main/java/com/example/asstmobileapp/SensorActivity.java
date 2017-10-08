@@ -55,13 +55,13 @@ public class SensorActivity extends Activity implements SensorEventListener {
     //location variables
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private double longitude;
-    private double latitude;
+    private double longitude = 0;
+    private double latitude = 0;
 
     Geocoder geocoder;
     List<Address> addresses;
 
-    String address;
+    String address = "n/a";
 
     @Override
     public final void onCreate(Bundle savedInstanceState) {
