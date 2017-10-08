@@ -39,6 +39,7 @@
             android:layout_width="160dp"
             android:layout_height="143dp"
             android:layout_weight="0.23"
+            android:adjustViewBounds="true"
             android:src="@drawable/accelerometer"></ImageButton>
 
         <ImageButton
@@ -46,6 +47,7 @@
             android:layout_width="160dp"
             android:layout_height="143dp"
             android:layout_weight="0.22"
+            android:adjustViewBounds="true"
             android:src="@drawable/contact"></ImageButton>
     </LinearLayout>
 
@@ -70,6 +72,7 @@
             android:layout_width="160dp"
             android:layout_height="143dp"
             android:layout_weight="0.33"
+            android:adjustViewBounds="true"
             android:src="@drawable/pressure"></ImageButton>
 
         <ImageButton
@@ -77,6 +80,7 @@
             android:layout_width="160dp"
             android:layout_height="143dp"
             android:layout_weight="0.20"
+            android:adjustViewBounds="true"
             android:src="@drawable/temperature"></ImageButton>
 
     </LinearLayout>

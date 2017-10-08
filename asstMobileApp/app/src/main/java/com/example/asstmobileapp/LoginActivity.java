@@ -159,6 +159,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         login_bt.setEnabled(true);
         finish();
+        Intent intent = new Intent(this, SensorActivity.class);
+        startActivity(intent);
     }
 
     public void onLoginFailed() {

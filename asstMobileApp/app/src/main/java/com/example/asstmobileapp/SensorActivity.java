@@ -67,8 +67,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensor);
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+
 
         // Get an instance of the sensor service, and use that to get an instance of
         // a particular sensor.
