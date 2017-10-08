@@ -46,7 +46,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
 
         ImageButton btnContacts = (ImageButton) findViewById(R.id.contacts);
-       // btnContacts.getBackground().setAlpha(0);
+        btnContacts.getBackground().setAlpha(0);
         btnContacts.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -81,8 +81,8 @@ public class SensorActivity extends Activity implements SensorEventListener {
         });
 
         ImageButton btnAccelerometer = (ImageButton) findViewById(R.id.accelerometerBtn);
-        btnPressure.getBackground().setAlpha(0);
-        btnPressure.setOnClickListener(new View.OnClickListener() {
+        btnAccelerometer.getBackground().setAlpha(0);
+        btnAccelerometer.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 Intent intent = new Intent(SensorActivity.this, AccelerometerActivity.class);
