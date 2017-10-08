@@ -35,6 +35,8 @@
         <activity android:name=".Pressure"></activity>
         <activity android:name=".Temperature"></activity>
         <activity android:name=".AccelerometerActivity"></activity>
+        <activity android:name=".LocationActivity"/>
+        <activity android:name=".LoginActivity"/>
 
     </application>
 

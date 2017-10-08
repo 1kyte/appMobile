@@ -38,16 +38,15 @@
             android:id="@+id/accelerometerBtn"
             android:layout_width="160dp"
             android:layout_height="143dp"
-            app:srcCompat="@drawable/accelerometer"
-            android:layout_weight="0.23"></ImageButton>
+            android:layout_weight="0.23"
+            android:src="@drawable/accelerometer"></ImageButton>
 
         <ImageButton
             android:id="@+id/contacts"
             android:layout_width="160dp"
             android:layout_height="143dp"
-            app:srcCompat="@drawable/contact"
-            android:layout_weight="0.22">
-        </ImageButton>
+            android:layout_weight="0.22"
+            android:src="@drawable/contact"></ImageButton>
     </LinearLayout>
 
     <TextView
@@ -70,15 +69,15 @@
             android:id="@+id/pressBtn"
             android:layout_width="160dp"
             android:layout_height="143dp"
-            app:srcCompat="@drawable/pressure"
-            android:layout_weight="0.33"></ImageButton>
+            android:layout_weight="0.33"
+            android:src="@drawable/pressure"></ImageButton>
 
         <ImageButton
             android:id="@+id/Temperaturebtn"
             android:layout_width="160dp"
             android:layout_height="143dp"
-            app:srcCompat="@drawable/temperature"
-            android:layout_weight="0.20"></ImageButton>
+            android:layout_weight="0.20"
+            android:src="@drawable/temperature"></ImageButton>
 
     </LinearLayout>
 
