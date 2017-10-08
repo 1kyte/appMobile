@@ -1,9 +1,18 @@
 package com.example.asstmobileapp;
 
+import android.Manifest;
 import android.app.Notification;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +31,14 @@ import android.widget.TextView;
 import android.util.Log;
 import android.app.TaskStackBuilder;
 import android.support.v4.app.NotificationCompat;
+import android.location.Location;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import java.util.List;
+import java.util.Locale;
+
+
+import java.util.List;
 
 public class AccelerometerActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
 
@@ -41,6 +58,26 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
     private boolean processState = false;   //step counts status
     private static final String TAG = "AccelerometerActivity";
 
+    //sensor thresholds and on/off status
+    private String tempThresh;
+    private String pressThresh;
+    private boolean pressToggle;
+    private boolean tempToggle;
+
+    //location variables
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private double longitude = 0;
+    private double latitude = 0;
+
+    Geocoder geocoder;
+    List<Address> addresses;
+    String address = "n/a";
+
+    //emergency contatcs
+    private String contact1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +85,84 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_accelerometer);
         startCountDownTime(10);
 
+        SharedPreferences prefs = getSharedPreferences("SafetyApp", 0);
+
+        contact1 = prefs.getString("contact1", "NA");
+        pressThresh = prefs.getString("pressure", "999");
+        pressToggle = prefs.getBoolean("pressureToggle", false);
+        tempThresh = prefs.getString("temperaturev1", "999");
+        tempToggle = prefs.getBoolean("tempToggle", false);
+
         sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensorAccelerometer = sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
         bindViews();
+
+        //location variable instantiations and code
+        geocoder = new Geocoder(this, Locale.getDefault());
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
+                try {
+                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                } catch (java.io.IOException e){}
+
+                address = addresses.get(0).getAddressLine(0);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            //re-direct user to settings if location is disabled
+            @Override
+            public void onProviderDisabled(String s) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        };
+
+        startLocationTracking();
+
     }
+
+    //---start location function definitions---
+    // handle the result of the location permissions request
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 10:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    startLocationTracking();
+                return;
+        }
+    }
+
+    private void startLocationTracking() {
+
+        //request for location permissions from the user
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.INTERNET}
+                        , 10);
+            }
+            return;
+        }
+
+        //start requesting location updates
+        locationManager.requestLocationUpdates("gps", 3000, 0, locationListener);
+    }
+
+    //---end location function definitions---
 
     //count down 10s
     private void startCountDownTime(long time) {
@@ -129,6 +239,9 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
                                             public void run() {
                                                 if ( tempStep > Integer.parseInt(tv_speed.getText().toString())) {
                                                     displayNotification();
+                                                    sendSms(contact1);
+                                                    tempToggle = false;
+                                                    pressToggle = false;
                                                 }
                                             }
                                         });
@@ -171,6 +284,13 @@ public class AccelerometerActivity extends AppCompatActivity implements View.OnC
         } else {
             return task.execute();
         }
+    }
+
+    public void sendSms(String ct1) {
+
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(ct1,null, String.format("Danger! This person is in an accident at %s\nLONG:%f\nLAT:%f",address,longitude,latitude),null,null);
+
     }
 
     @Override
