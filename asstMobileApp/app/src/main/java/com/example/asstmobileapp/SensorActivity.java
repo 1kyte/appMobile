@@ -88,8 +88,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
         tempToggle = prefs.getBoolean("tempToggle", false);
 
 
-        TextView tv = (TextView)findViewById(R.id.textView2);
-        tv.setText(tempThresh );
+
 
     }
 
@@ -110,6 +109,8 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
         if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
             float temper = event.values[0];
+            TextView tv = (TextView)findViewById(R.id.textView2);
+            tv.setText(temper + "" );
             if (temper > Float.parseFloat(tempThresh) && tempToggle) {
                 sendSms(contact1);
                 sendSms(contact2);

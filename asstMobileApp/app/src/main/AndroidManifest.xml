@@ -34,8 +34,8 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".Contacts" />
         <activity android:name=".Pressure" />
-        <activity android:name=".Temperature" />
         <activity android:name=".SensorActivity" />
+        <activity android:name=".Temperature" />
         <activity android:name=".AccelerometerActivity" />
     </application>
 

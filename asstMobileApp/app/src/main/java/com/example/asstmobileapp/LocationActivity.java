@@ -3,6 +3,8 @@ package com.example.asstmobileapp;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,13 +20,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
+import java.util.Locale;
+
 public class LocationActivity extends AppCompatActivity {
 
     private TextView longitudeValue;
     private TextView latitudeValue;
+    private TextView detailedLocationValue;
     private Button locationTrackButton;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private double longitude;
+    private double latitude;
+
+    Geocoder geocoder;
+    List<Address> addresses;
+
+    String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +46,25 @@ public class LocationActivity extends AppCompatActivity {
 
         bindViews();
 
+        geocoder = new Geocoder(this, Locale.getDefault());
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                latitudeValue.setText(Double.toString(location.getLatitude()));
-                longitudeValue.setText(Double.toString(location.getLongitude()));
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
+                try {
+                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                } catch (java.io.IOException e){}
+
+                address = addresses.get(0).getAddressLine(0);
+
+                latitudeValue.setText(Double.toString(latitude));
+                longitudeValue.setText(Double.toString(longitude));
+                detailedLocationValue.setText(address);
+
             }
 
             @Override
@@ -85,7 +111,7 @@ public class LocationActivity extends AppCompatActivity {
         locationTrackButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+                locationManager.requestLocationUpdates("gps", 3000, 0, locationListener);
             }
         });
     }
@@ -95,6 +121,7 @@ public class LocationActivity extends AppCompatActivity {
     private void bindViews(){
         longitudeValue = (TextView) findViewById(R.id.longitudeValue);
         latitudeValue = (TextView) findViewById(R.id.latitudeValue);
+        detailedLocationValue = (TextView) findViewById(R.id.detailedLocationValue);
         locationTrackButton = (Button) findViewById(R.id.locationTrackButton);
     }
 
